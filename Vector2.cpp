@@ -1,10 +1,8 @@
 #include "Vector2.h"
 #include <cmath>		//sqat
 
-Vector2* vec = new Vector2;
 
 Vector2::Vector2()
-	:Vector2(0,0)
 {
 }
 
@@ -15,7 +13,7 @@ Vector2::Vector2(float x, float y)
 
 float Vector2::length() const
 {
-	return (x*x)+(y*y);
+	return sqrtf(x * x + y * y);
 }
 
 Vector2& Vector2::normalize()
@@ -46,7 +44,7 @@ Vector2 Vector2::operator+() const
 
 Vector2 Vector2::operator-() const
 {
-	return Vector2(-x, -y);
+	return Vector2(-*this);
 }
 
 Vector2& Vector2::operator+=(const Vector2& v)
