@@ -19,6 +19,11 @@ int DrawSphere3D(const Vector3& CenterPos, const float r, const int DivNum,
 
 int DrawLine3D(const Vector3& Pos1, const Vector3& Pos2, const unsigned int Color);
 
+int SetCameraPositionAndTargetAndUpVec(
+	const Vector3& cameraPosition,		//カメラの位置
+	const Vector3& cameraTarget,		//カメラの注視点
+	const Vector3& cameraUp				//カメラの上の向き
+);
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine,
 	_In_ int nCmdShow) {
 	// ウィンドウモードに設定
@@ -46,6 +51,30 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// (ダブルバッファ)描画先グラフィック領域は裏面を指定
 	SetDrawScreen(DX_SCREEN_BACK);
 
+	//Zバッファを有効にする
+	SetUseZBuffer3D(TRUE);
+	//Zバッファへの書き込みを有効にする
+	SetWriteZBuffer3D(TRUE);
+
+	Vector3 cameraPosition(0.0f, 0.0f, -30.0f);
+	Vector3 cameraTarget(0.0f, 0.0f, 0.0f);
+	Vector3 cameraUp(0.0f, 1.0f, 0.0f);
+
+	SetCameraPositionAndTargetAndUpVec(
+		cameraPosition,//カメラの位置
+		cameraTarget,  //カメラの注視点
+		cameraUp	   //カメラの上の向き
+	);
+
+	Vector3 A(3, -1, 2);
+	Vector3 B(1, 5, -4);
+	Vector3 C(-1, 7, 6);
+
+	Vector3 AB = B - A;//ABベクトルを生成
+	Vector3 BC = C - B;//BCベクトルを生成
+
+	Vector3 n = AB.cross(BC);//法線ベクトルを求める(ABとBCの外積ベクトル)
+	n.normalize();//法線ベクトルの単位ベクトル化
 
 	// 画像などのリソースデータの変数宣言と読み込み
 
@@ -56,15 +85,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	SetCameraNearFar(1.0f, 1000.0f);
 	SetCameraScreenCenter(WIN_WIDTH / 2.0f, WIN_HEIGHT / 2.0f);
-	SetCameraPositionAndTargetAndUpVec(
-		VGet(0.0f, 0.0f, -100.0f),
-		VGet(0.0f, 0.0f, 0.0f),
-		VGet(0.0f, 1.0f, 0.0f));
-
-	Vector3 position(0, 0, 0);
-	Vector3 velocity(0.0f, 0.0f, 0.5f);
-	SetUseZBufferFlag(TRUE);
-	SetWriteZBufferFlag(TRUE);
+	
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
 
@@ -82,12 +103,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
-		position += velocity;
+		Vector3 v = cameraPosition - (A + B + C) / 3;
+		v.normalize();
 
+		unsigned color = GetColor(255, 255, 255);
+		if (v.dot(n)<0)
+		{
+			color= GetColor(255, 0, 0);
+		}
 		// 描画処理
 		ClearDrawScreen();
 		
-		DrawSphere3D(position, 80.0f, 32, GetColor(0, 0, 255), GetColor(255, 255, 255), TRUE);
+		DrawLine3D(A, B, color);
+		DrawLine3D(B, C, color);
+		DrawLine3D(C, A, color);
+		//法線視覚化
+		DrawLine3D(A, A + n, GetColor(0,255,0));
+		DrawLine3D(B, B + n, GetColor(0,255,0));
+		DrawLine3D(C, C + n, GetColor(0,255,0));
 		//---------  ここまでにプログラムを記述  ---------//
 		// (ダブルバッファ)裏面
 		ScreenFlip();
@@ -133,4 +166,17 @@ int DrawLine3D(const Vector3& Pos1, const Vector3& Pos2, const unsigned int Colo
 	VECTOR p2 = { Pos2.x,Pos2.y,Pos2.z };
 
 	return DrawLine3D(p1, p2, Color);
+}
+
+int SetCameraPositionAndTargetAndUpVec(
+	const Vector3& cameraPosition,		//カメラの位置
+	const Vector3& cameraTarget,		//カメラの注視点
+	const Vector3& cameraUp				//カメラの上の向き
+)
+{
+	VECTOR position = { cameraPosition.x,cameraPosition.y,cameraPosition.z };
+	VECTOR target = { cameraTarget.x, cameraTarget.y, cameraTarget.z };
+	VECTOR up = { cameraUp.x,cameraUp.y,cameraUp.z };
+
+	return SetCameraPositionAndTargetAndUpVec(position, target, up);
 }
