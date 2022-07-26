@@ -56,7 +56,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//Zバッファへの書き込みを有効にする
 	SetWriteZBuffer3D(TRUE);
 
-	Vector3 cameraPosition(0.0f, 0.0f, -30.0f);
+	Vector3 cameraPosition(0.0f, 10.0f, 30.0f);
 	Vector3 cameraTarget(0.0f, 0.0f, 0.0f);
 	Vector3 cameraUp(0.0f, 1.0f, 0.0f);
 
