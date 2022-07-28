@@ -1,5 +1,4 @@
 #include "DxLib.h"
-#include "Vector2.h"
 #include "Vector3.h"
 #include "Matrix4.h"
 #include <cstring>
@@ -14,8 +13,6 @@ const int WIN_WIDTH = 1600;
 const int WIN_HEIGHT = 900;
 
 //関数プロトタイプ宣言
-int DrawCircle(Vector2 vec, int r, unsigned int color);
-
 //球体作成
 int DrawSphere3D(const Vector3& CenterPos, const float r, const int DivNum,
 	const unsigned int DifColor, const unsigned int SpcColor, const int FillFlag);
@@ -127,10 +124,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			rotX = rotY = rotZ = 0.0f;
 		}
 
+		//各種変換行列の計算
+		Matrix4 matScale = scale(Vector3(5.0f, 5.0f, 5.0f));
+
+		Matrix4 matRotX = rotateX(rotX);
+		Matrix4 matRotY = rotateY(rotY);
+		Matrix4 matRotZ = rotateZ(rotZ);
+		Matrix4 matRot = matRotZ * matRotX * matRotY;
+
+		Matrix4 matWorld = matScale * matRot;
+
+		MV1SetMatrix(model, matWorld);
+
 		// 描画処理
 		ClearDrawScreen();
-		
-		
+		DrawAxis3D(200.0f);
+		MV1DrawModel(model);
+
+		DrawKeyOperation();
 		//---------  ここまでにプログラムを記述  ---------//
 		// (ダブルバッファ)裏面
 		ScreenFlip();
@@ -155,12 +166,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	return 0;
 }
 
-//2Dベクトルの円描画
-int DrawCircle(Vector2 vec, int r, unsigned int color)
-{
-	return DrawCircle(static_cast<int>(vec.x), static_cast<int>(vec.y), r, color);
-}
-
 //球描画 DifColor=球の色,SpcColor=光の色,FillFlag=0=ワイヤーフレーム,1=塗りつぶし
 int DrawSphere3D(const Vector3& CenterPos, const float r, const int DivNum,
 	const unsigned int DifColor, const unsigned int SpcColor, const int FillFlag)
@@ -177,6 +182,15 @@ int DrawLine3D(const Vector3& Pos1, const Vector3& Pos2, const unsigned int Colo
 
 	return DrawLine3D(p1, p2, Color);
 }
+//円錐作成
+int DrawCone3D(const Vector3& TopPos, const Vector3& BottomPos, const float r,
+	const int DivNum, const unsigned int DifColor, const unsigned int SpcColor, const int FillFlag)
+{
+	VECTOR topPos = { TopPos.x,TopPos.y,TopPos.z };
+	VECTOR bottomPos = { BottomPos.x,BottomPos.y,BottomPos.z };
+
+	return DrawCone3D(topPos, bottomPos, r, DivNum, DifColor, SpcColor, FillFlag);
+}
 
 int SetCameraPositionAndTargetAndUpVec(
 	const Vector3& cameraPosition,		//カメラの位置
@@ -189,4 +203,43 @@ int SetCameraPositionAndTargetAndUpVec(
 	VECTOR up = { cameraUp.x,cameraUp.y,cameraUp.z };
 
 	return SetCameraPositionAndTargetAndUpVec(position, target, up);
+}
+
+//モデルの座標変換用行列をセット
+int MV1SetMatrix(const int MHandle, const Matrix4 Matrix)
+{
+	MATRIX matrix;
+	std::memcpy(&matrix, &Matrix, sizeof MATRIX);	//メモリ間コピー
+
+	return MV1SetMatrix(MHandle, matrix);
+}
+
+//x,y,z軸描画
+void DrawAxis3D(const float length)
+{
+	//軸の線
+	DrawLine3D(Vector3(-length, 0.0f, 0.0f), Vector3(+length, 0.0f, 0.0f), GetColor(255, 0, 0));//X軸
+	DrawLine3D(Vector3(0.0f, -length, 0.0f), Vector3(0.0f, +length, 0.0f), GetColor(0, 255, 0));//Y軸
+	DrawLine3D(Vector3(0.0f, 0.0f, -length), Vector3(0.0f, 0.0f, +length), GetColor(0, 0, 255));//Z軸
+
+	//軸の先の描画
+	const float ConeSize = 10.0f;
+
+	DrawCone3D(Vector3(length, 0.0f, 0.0f), Vector3(length - ConeSize, 0.0f, 0.0f), ConeSize / 2, 16,
+		GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
+
+	DrawCone3D(Vector3(0.0f, length, 0.0f), Vector3(0.0f, length - ConeSize, 0.0f), ConeSize / 2, 16,
+		GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
+
+	DrawCone3D(Vector3(0.0f, 0.0f, length), Vector3(0.0f, 0.0f, length - ConeSize), ConeSize / 2, 16,
+		GetColor(0, 0, 255), GetColor(255, 255, 255), TRUE);
+}
+
+//キー操作描画
+void DrawKeyOperation()
+{
+	DrawFormatString(10, 20 * 1, GetColor(255, 255, 255), "　[W][E][R]　R : リセット");
+	DrawFormatString(10, 20 * 2, GetColor(255, 255, 255), "[A][S][D]　　AD: Y軸周りの回転");
+	DrawFormatString(10, 20 * 3, GetColor(255, 255, 255), " [Z]		　　WS: X軸周りの回転");
+	DrawFormatString(10, 20 * 4, GetColor(255, 255, 255), "　			EX: Z軸周りの回転");
 }
