@@ -1,29 +1,46 @@
 #include "DxLib.h"
 #include "Vector2.h"
 #include "Vector3.h"
+#include "Matrix4.h"
+#include <cstring>
 
 // ウィンドウのタイトルに表示する文字列
 const char TITLE[] = "LE2B_07_イワタ_ユウシロウ";
 
 // ウィンドウ横幅
-const int WIN_WIDTH = 1024;
+const int WIN_WIDTH = 1600;
 
 // ウィンドウ縦幅
-const int WIN_HEIGHT = 576;
+const int WIN_HEIGHT = 900;
 
 //関数プロトタイプ宣言
 int DrawCircle(Vector2 vec, int r, unsigned int color);
 
+//球体作成
 int DrawSphere3D(const Vector3& CenterPos, const float r, const int DivNum,
 	const unsigned int DifColor, const unsigned int SpcColor, const int FillFlag);
 
+//3Dの線
 int DrawLine3D(const Vector3& Pos1, const Vector3& Pos2, const unsigned int Color);
 
+//円錐作成
+int DrawCone3D(const Vector3& TopPos, const Vector3& BottomPos, const float r,
+	const int DivNum, const unsigned int DifColor, const unsigned int SpcColor, const int FillFlag);
+
+//カメラの位置と姿勢の設定
 int SetCameraPositionAndTargetAndUpVec(
 	const Vector3& cameraPosition,		//カメラの位置
 	const Vector3& cameraTarget,		//カメラの注視点
 	const Vector3& cameraUp				//カメラの上の向き
 );
+
+//モデルの座標変換用行列をセット
+int MV1SetMatrix(const int MHandle, const Matrix4 Matrix);
+//x,y,z軸描画
+void DrawAxis3D(const float length);
+//キー操作の描画
+void DrawKeyOperation();
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine,
 	_In_ int nCmdShow) {
 	// ウィンドウモードに設定
@@ -56,36 +73,28 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//Zバッファへの書き込みを有効にする
 	SetWriteZBuffer3D(TRUE);
 
-	Vector3 cameraPosition(0.0f, 10.0f, 30.0f);
+	Vector3 cameraPosition(50.0f, 50.0f, -400.0f);
 	Vector3 cameraTarget(0.0f, 0.0f, 0.0f);
 	Vector3 cameraUp(0.0f, 1.0f, 0.0f);
 
+	SetCameraNearFar(1.0f, 1000.0f);
+	SetCameraScreenCenter(WIN_WIDTH / 2.0f, WIN_HEIGHT / 2.0f);
 	SetCameraPositionAndTargetAndUpVec(
 		cameraPosition,//カメラの位置
 		cameraTarget,  //カメラの注視点
 		cameraUp	   //カメラの上の向き
 	);
 
-	Vector3 A(3, -1, 2);
-	Vector3 B(1, 5, -4);
-	Vector3 C(-1, 7, 6);
-
-	Vector3 AB = B - A;//ABベクトルを生成
-	Vector3 BC = C - B;//BCベクトルを生成
-
-	Vector3 n = AB.cross(BC);//法線ベクトルを求める(ABとBCの外積ベクトル)
-	n.normalize();//法線ベクトルの単位ベクトル化
-
 	// 画像などのリソースデータの変数宣言と読み込み
-
+	int model = MV1LoadModel("Model/fighter.mqo");
 
 	// ゲームループで使う変数の宣言
-	/*Vector2 position(10, 100);
-	Vector2 velocity(+1.0f, 0.5f);*/
+	//x,y,z軸の回転角度
+	const float ROT_UNIT = 0.01f;
+	float rotX = 0.0f;
+	float rotY = 0.0f;
+	float rotZ = 0.0f;
 
-	SetCameraNearFar(1.0f, 1000.0f);
-	SetCameraScreenCenter(WIN_WIDTH / 2.0f, WIN_HEIGHT / 2.0f);
-	
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
 
@@ -103,24 +112,25 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
-		Vector3 v = cameraPosition - (A + B + C) / 3;
-		v.normalize();
+		if (CheckHitKey(KEY_INPUT_A)) rotY += ROT_UNIT;
+		if (CheckHitKey(KEY_INPUT_D)) rotY -= ROT_UNIT;
 
-		unsigned color = GetColor(255, 255, 255);
-		if (v.dot(n)<0)
+		if (CheckHitKey(KEY_INPUT_W)) rotX += ROT_UNIT;
+		if (CheckHitKey(KEY_INPUT_S)) rotX -= ROT_UNIT;
+
+		if (CheckHitKey(KEY_INPUT_E)) rotZ += ROT_UNIT;
+		if (CheckHitKey(KEY_INPUT_Z)) rotZ -= ROT_UNIT;
+
+		//Rでリセット
+		if (CheckHitKey(KEY_INPUT_R))
 		{
-			color= GetColor(255, 0, 0);
+			rotX = rotY = rotZ = 0.0f;
 		}
+
 		// 描画処理
 		ClearDrawScreen();
 		
-		DrawLine3D(A, B, color);
-		DrawLine3D(B, C, color);
-		DrawLine3D(C, A, color);
-		//法線視覚化
-		DrawLine3D(A, A + n, GetColor(0,255,0));
-		DrawLine3D(B, B + n, GetColor(0,255,0));
-		DrawLine3D(C, C + n, GetColor(0,255,0));
+		
 		//---------  ここまでにプログラムを記述  ---------//
 		// (ダブルバッファ)裏面
 		ScreenFlip();
