@@ -112,8 +112,35 @@ Vector3 transform(const Vector3& v, const Matrix4& m)
 
 
 //代入演算子オーバーロード
-Matrix4& operator*=(Matrix4& m1, Matrix4& m2);
+Matrix4& operator*=(Matrix4& m1, Matrix4& m2)
+{
+	Matrix4 result{ 0.0f };
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			for (int k = 0; k < 4; k++)
+			{
+				result.m[i][j] = m1.m[i][j] * m2.m[i][j];
+			}
+		}
+	}
+	m1 = result;
+
+	return m1;
+}
 
 //2項演算子オーバーロード
-Matrix4 operator* (const Matrix4& m1, const Matrix4& m2);
-Vector3 operator* (const Vector3& v, const Matrix4& m);
+const Matrix4 operator*(const Matrix4& m1, const Matrix4& m2)
+{
+	Matrix4 result = m1;
+	Matrix4 result2 = m2;
+
+	return result *= result2;
+}
+
+const Vector3 operator*(const Vector3& v, const Matrix4& m)
+{
+	return transform(v, m);
+}

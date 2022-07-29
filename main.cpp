@@ -83,15 +83,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	);
 
 	// 画像などのリソースデータの変数宣言と読み込み
-	int model = MV1LoadModel("Model/fighter.mqo");
+	int model = MV1LoadModel("car/car.mqo");
 
 	// ゲームループで使う変数の宣言
 	//x,y,z軸の回転角度
-	const float ROT_UNIT = 0.01f;
+	const float ROT_UNIT = 0.05f;
 	float rotX = 0.0f;
 	float rotY = 0.0f;
 	float rotZ = 0.0f;
 
+	Vector3 trans(0.0f,0.0f,0.0f);
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
 
@@ -118,27 +119,34 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		if (CheckHitKey(KEY_INPUT_E)) rotZ += ROT_UNIT;
 		if (CheckHitKey(KEY_INPUT_Z)) rotZ -= ROT_UNIT;
 
+		if (CheckHitKey(KEY_INPUT_LEFT)) trans.x -= 10.0f;
+		
 		//Rでリセット
 		if (CheckHitKey(KEY_INPUT_R))
 		{
 			rotX = rotY = rotZ = 0.0f;
+			trans.x = trans.y = trans.z = 0.0f;
 		}
 
 		//各種変換行列の計算
-		Matrix4 matScale = scale(Vector3(5.0f, 5.0f, 5.0f));
+		Matrix4 matScale = scale(Vector3(1.0f, 1.0f,1.0f));
 
 		Matrix4 matRotX = rotateX(rotX);
 		Matrix4 matRotY = rotateY(rotY);
 		Matrix4 matRotZ = rotateZ(rotZ);
 		Matrix4 matRot = matRotZ * matRotX * matRotY;
 
-		Matrix4 matWorld = matScale * matRot;
+		Matrix4 matTrans = translate(trans);
+
+		Matrix4 matWorld = matScale * matRot * matTrans;
 
 		MV1SetMatrix(model, matWorld);
 
 		// 描画処理
 		ClearDrawScreen();
+
 		DrawAxis3D(200.0f);
+		
 		MV1DrawModel(model);
 
 		DrawKeyOperation();
@@ -241,5 +249,5 @@ void DrawKeyOperation()
 	DrawFormatString(10, 20 * 1, GetColor(255, 255, 255), "　[W][E][R]　R : リセット");
 	DrawFormatString(10, 20 * 2, GetColor(255, 255, 255), "[A][S][D]　　AD: Y軸周りの回転");
 	DrawFormatString(10, 20 * 3, GetColor(255, 255, 255), " [Z]		　　WS: X軸周りの回転");
-	DrawFormatString(10, 20 * 4, GetColor(255, 255, 255), "　			EX: Z軸周りの回転");
+	DrawFormatString(10, 20 * 4, GetColor(255, 255, 255), "　			EZ: Z軸周りの回転");
 }
