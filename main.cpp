@@ -83,7 +83,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	);
 
 	// 画像などのリソースデータの変数宣言と読み込み
-	int model = MV1LoadModel("car/car.mqo");
+	int model = MV1LoadModel("fighter/fighter.mqo");
 
 	// ゲームループで使う変数の宣言
 	//x,y,z軸の回転角度
@@ -92,7 +92,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	float rotY = 0.0f;
 	float rotZ = 0.0f;
 
-	Vector3 trans(0.0f,0.0f,0.0f);
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
 
@@ -118,27 +117,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		if (CheckHitKey(KEY_INPUT_E)) rotZ += ROT_UNIT;
 		if (CheckHitKey(KEY_INPUT_Z)) rotZ -= ROT_UNIT;
-
-		if (CheckHitKey(KEY_INPUT_LEFT)) trans.x -= 10.0f;
 		
 		//Rでリセット
 		if (CheckHitKey(KEY_INPUT_R))
 		{
 			rotX = rotY = rotZ = 0.0f;
-			trans.x = trans.y = trans.z = 0.0f;
 		}
 
 		//各種変換行列の計算
-		Matrix4 matScale = scale(Vector3(1.0f, 1.0f,1.0f));
+		Matrix4 matScale = scale(Vector3(25.0f, 25.0f,25.0f));
 
 		Matrix4 matRotX = rotateX(rotX);
 		Matrix4 matRotY = rotateY(rotY);
 		Matrix4 matRotZ = rotateZ(rotZ);
 		Matrix4 matRot = matRotZ * matRotX * matRotY;
 
-		Matrix4 matTrans = translate(trans);
-
-		Matrix4 matWorld = matScale * matRot * matTrans;
+		Matrix4 matWorld = matScale * matRot;
 
 		MV1SetMatrix(model, matWorld);
 
