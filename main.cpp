@@ -77,13 +77,27 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SetCameraNearFar(1.0f, 1000.0f);
 	SetCameraScreenCenter(WIN_WIDTH / 2.0f, WIN_HEIGHT / 2.0f);
 	SetCameraPositionAndTargetAndUpVec(
-		cameraPosition,//カメラの位置
-		cameraTarget,  //カメラの注視点
-		cameraUp	   //カメラの上の向き
+		Vector3(0.0f,0.0f,-120.0f),//カメラの位置
+		Vector3(0.0f, 0.0f, 0.0f),  //カメラの注視点
+		Vector3(0.0f, 1.0f, 0.0f)	   //カメラの上の向き
 	);
 
-	// 画像などのリソースデータの変数宣言と読み込み
-	int model = MV1LoadModel("fighter/fighter.mqo");
+	//時間計測に必要なデータ
+	long long startCount = 0;	//開始時間
+	long long nowCount = 0;		//現在時間
+	long long elapsedCount = 0;	//経過時間
+	
+	//補間で使うデータ(start→endを5秒で完了させる)
+	Vector3 start(-100.0f, 0.0f, 0.0f);		//スタート地点
+	Vector3 end(+100.0f, 0.0f, 0.0f);		//ゴール地点
+	float	maxTime = 5.0f;					//全体時間
+	float	timeRate;						//何パーセント時間が進んだか(率)
+
+	//球の位置
+	Vector3 position;
+
+	//実行前にカウンタ値を取得
+	startCount = GetNowHiPerformanceCount();
 
 	// ゲームループで使う変数の宣言
 	//x,y,z軸の回転角度
@@ -109,39 +123,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
-		if (CheckHitKey(KEY_INPUT_A)) rotY += ROT_UNIT;
-		if (CheckHitKey(KEY_INPUT_D)) rotY -= ROT_UNIT;
-
-		if (CheckHitKey(KEY_INPUT_W)) rotX += ROT_UNIT;
-		if (CheckHitKey(KEY_INPUT_S)) rotX -= ROT_UNIT;
-
-		if (CheckHitKey(KEY_INPUT_E)) rotZ += ROT_UNIT;
-		if (CheckHitKey(KEY_INPUT_Z)) rotZ -= ROT_UNIT;
-		
-		//Rでリセット
-		if (CheckHitKey(KEY_INPUT_R))
-		{
-			rotX = rotY = rotZ = 0.0f;
-		}
-
-		//各種変換行列の計算
-		Matrix4 matScale = scale(Vector3(25.0f, 25.0f,25.0f));
-
-		Matrix4 matRotX = rotateX(rotX);
-		Matrix4 matRotY = rotateY(rotY);
-		Matrix4 matRotZ = rotateZ(rotZ);
-		Matrix4 matRot = matRotZ * matRotX * matRotY;
-
-		Matrix4 matWorld = matScale * matRot;
-
-		MV1SetMatrix(model, matWorld);
+		nowCount = GetNowHiPerformanceCount();
+		elapsedCount = nowCount - startCount;	//経過時間=現在時間-開始時間
+		float elapsedTime = static_cast<float> (elapsedCount) / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
 		// 描画処理
 		ClearDrawScreen();
 
 		DrawAxis3D(200.0f);
-		
-		MV1DrawModel(model);
 
 		DrawKeyOperation();
 		//---------  ここまでにプログラムを記述  ---------//
