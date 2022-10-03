@@ -73,7 +73,7 @@ Matrix4 rotateZ(float angle)
 	{
 		cos,sin,0.0f,0.0f,
 		-sin,cos,0.0f,0.0f,
-		0.0f,0.0f,0.0f,1.0f,
+		0.0f,0.0f,1.0f,0.0f,
 		0.0f,0.0f,0.0f,1.0f
 	};
 
@@ -114,18 +114,20 @@ Vector3 transform(const Vector3& v, const Matrix4& m)
 //代入演算子オーバーロード
 Matrix4& operator*=(Matrix4& m1, Matrix4& m2)
 {
-	Matrix4 result{ 0.0f };
+	Matrix4 result{0.0f};
 
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
+			
 			for (int k = 0; k < 4; k++)
 			{
-				result.m[i][j] = m1.m[i][j] * m2.m[i][j];
+				result.m[i][j] += m1.m[i][k] * m2.m[k][j];
 			}
 		}
 	}
+
 	m1 = result;
 
 	return m1;

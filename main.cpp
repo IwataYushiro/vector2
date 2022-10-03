@@ -7,10 +7,10 @@
 const char TITLE[] = "LE2B_07_イワタ_ユウシロウ";
 
 // ウィンドウ横幅
-const int WIN_WIDTH = 1600;
+const int WIN_WIDTH = 1024;
 
 // ウィンドウ縦幅
-const int WIN_HEIGHT = 900;
+const int WIN_HEIGHT = 576;
 
 //関数プロトタイプ宣言
 //球体作成
@@ -34,7 +34,7 @@ int SetCameraPositionAndTargetAndUpVec(
 //モデルの座標変換用行列をセット
 int MV1SetMatrix(const int MHandle, const Matrix4 Matrix);
 //x,y,z軸描画
-void DrawAxis3D(const float length);
+void DrawAxis3D(const float length);	//x,y,z軸の描画
 //キー操作の描画
 void DrawKeyOperation();
 

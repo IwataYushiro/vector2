@@ -35,7 +35,12 @@ Vector3 Vector3::cross(const Vector3& v) const
 
 	return vec3;
 }
+//•âŠÔŠÖ”
+	//üŒ`•âŠÔ(1ŸŠÖ”•âŠÔ)
+const Vector3 Vector3::leap(const Vector3& start, const Vector3& end, const float t)
+{
 
+}
 
 Vector3 Vector3::operator+()const
 {
