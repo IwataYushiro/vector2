@@ -122,17 +122,37 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		ClearDrawScreen();
 		//---------  ここからプログラムを記述  ----------//
 
+		if (CheckHitKey(KEY_INPUT_R))
+		{
+			startCount = GetNowHiPerformanceCount();
+		}
 		// 更新処理
 		nowCount = GetNowHiPerformanceCount();
 		elapsedCount = nowCount - startCount;	//経過時間=現在時間-開始時間
 		float elapsedTime = static_cast<float> (elapsedCount) / 1'000'000.0f;//マイクロ秒を秒に単位変換
 
+		//スタート地点		::	start
+		//ゴール地点		::	end
+		//経過時間			::	elapsedTime[s]
+		//移動完了率		::	timeRate(%)
+		 
+		timeRate = min(elapsedTime / maxTime, 1.0f);
+		
+		position = lerp(start, end, timeRate);
 		// 描画処理
 		ClearDrawScreen();
+		DrawAxis3D(500.0f);
 
-		DrawAxis3D(200.0f);
+		//球の描画
+		DrawSphere3D(position, 5.0f, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
+		
+		//変数の値を表示
+		DrawFormatString(0, 0, GetColor(255, 255, 255), "position (%5.1f,%5.1f,%5.1f)",
+			position.x, position.y, position.z);
 
-		DrawKeyOperation();
+		DrawFormatString(20, 20, GetColor(255, 255, 255), "%7.3f [s]", elapsedTime);
+		DrawFormatString(0, 40, GetColor(255, 255, 255), "[R] : Restart");
+
 		//---------  ここまでにプログラムを記述  ---------//
 		// (ダブルバッファ)裏面
 		ScreenFlip();

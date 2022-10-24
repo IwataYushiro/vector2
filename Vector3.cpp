@@ -37,9 +37,11 @@ Vector3 Vector3::cross(const Vector3& v) const
 }
 //•âŠÔŠÖ”
 	//üŒ`•âŠÔ(1ŸŠÖ”•âŠÔ)
-const Vector3 Vector3::leap(const Vector3& start, const Vector3& end, const float t)
+const Vector3 lerp(const Vector3& start, const Vector3& end, const float t)
 {
-
+	//float y=t;
+	//return start * (1.0f - y) + end * y;
+	return start * (1.0f - t) + end * t;
 }
 
 Vector3 Vector3::operator+()const
