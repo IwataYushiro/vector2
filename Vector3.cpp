@@ -50,7 +50,8 @@ const Vector3 Bezier2(const Vector3& p0, const Vector3& p1, const Vector3& p2, c
 
 const Vector3 Bezier3(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float t)
 {
-	return 6.0f * (1.0f - t) * (p2 - 2.0f * p1 + p0) + 6.0f * t * (p3 - 2.0f * p2 + p1);
+	return (1.0f - t) * (1.0f - t) * (1.0f - t) * p0 + 3.0f * (1.0f - t) * (1.0f - t) * t *
+		p1 + 3 * (1.0f - t) * t * t * p2 + t * t * t * p3;
 }
 
 Vector3 Vector3::operator+()const
