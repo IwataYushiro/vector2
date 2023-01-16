@@ -19,7 +19,7 @@ public:
 	Vector3 cross(const Vector3& v) const;	//外積を求める
 	//補間関数
 	//線形補間(1次関数補間)
-	
+
 	//単項演算子オーバーロード
 	Vector3 operator+() const;
 	Vector3 operator-() const;

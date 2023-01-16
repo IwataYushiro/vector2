@@ -4,7 +4,7 @@
 #include <cstring>
 
 // ウィンドウのタイトルに表示する文字列
-const char TITLE[] = "LE2B_07_イワタ_ユウシロウ";
+const char TITLE[] = "LE2C_03_イワタ_ユウシロウ";
 
 // ウィンドウ横幅
 const int WIN_WIDTH = 1024;
@@ -77,7 +77,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SetCameraNearFar(1.0f, 1000.0f);
 	SetCameraScreenCenter(WIN_WIDTH / 2.0f, WIN_HEIGHT / 2.0f);
 	SetCameraPositionAndTargetAndUpVec(
-		Vector3(0.0f,200.0f,-120.0f),//カメラの位置
+		Vector3(0.0f, 200.0f, -120.0f),//カメラの位置
 		Vector3(0.0f, 0.0f, 0.0f),  //カメラの注視点
 		Vector3(0.0f, 1.0f, 0.0f)	   //カメラの上の向き
 	);
@@ -86,7 +86,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	long long startCount = 0;	//開始時間
 	long long nowCount = 0;		//現在時間
 	long long elapsedCount = 0;	//経過時間
-	
+
 	//補間で使うデータ(start→endを5秒で完了させる)
 	Vector3 start(-100.0f, 0.0f, 0.0f);		//スタート地点
 	Vector3 point1(-50.0f, 0.0f, 100.0f);		//制御点
@@ -137,17 +137,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//ゴール地点		::	end
 		//経過時間			::	elapsedTime[s]
 		//移動完了率		::	timeRate(%)
-		 
+
 		timeRate = min(elapsedTime / maxTime, 1.0f);
-		
-		position = Bezier3(start,point1,point2, end, timeRate);
+
+		position = Bezier3(start, point1, point2, end, timeRate);
 		// 描画処理
 		ClearDrawScreen();
 		DrawAxis3D(500.0f);
 
 		//球の描画
 		DrawSphere3D(position, 5.0f, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
-		
+
 		//変数の値を表示
 		DrawFormatString(0, 0, GetColor(255, 255, 255), "position (%6.1f,%6.1f,%6.1f)",
 			position.x, position.y, position.z);
