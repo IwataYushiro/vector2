@@ -77,7 +77,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SetCameraNearFar(1.0f, 1000.0f);
 	SetCameraScreenCenter(WIN_WIDTH / 2.0f, WIN_HEIGHT / 2.0f);
 	SetCameraPositionAndTargetAndUpVec(
-		Vector3(0.0f,0.0f,-120.0f),//カメラの位置
+		Vector3(-20.0f,20.0f,-120.0f),//カメラの位置
 		Vector3(0.0f, 0.0f, 0.0f),  //カメラの注視点
 		Vector3(0.0f, 1.0f, 0.0f)	   //カメラの上の向き
 	);
@@ -89,6 +89,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	
 	//補間で使うデータ(start→endを5秒で完了させる)
 	Vector3 start(-100.0f, 0.0f, 0.0f);		//スタート地点
+	Vector3 point1(0.0f, 0.0f, 100.0f);		//制御点
 	Vector3 end(+100.0f, 0.0f, 0.0f);		//ゴール地点
 	float	maxTime = 5.0f;					//全体時間
 	float	timeRate;						//何パーセント時間が進んだか(率)
@@ -138,7 +139,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		 
 		timeRate = min(elapsedTime / maxTime, 1.0f);
 		
-		position = lerp(start, end, timeRate);
+		position = Bezier2(start,point1, end, timeRate);
 		// 描画処理
 		ClearDrawScreen();
 		DrawAxis3D(500.0f);
@@ -147,11 +148,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		DrawSphere3D(position, 5.0f, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
 		
 		//変数の値を表示
-		DrawFormatString(0, 0, GetColor(255, 255, 255), "position (%5.1f,%5.1f,%5.1f)",
+		DrawFormatString(0, 0, GetColor(255, 255, 255), "position (%6.1f,%6.1f,%6.1f)",
 			position.x, position.y, position.z);
 
-		DrawFormatString(20, 20, GetColor(255, 255, 255), "%7.3f [s]", elapsedTime);
+		DrawFormatString(0, 20, GetColor(255, 255, 255), "%7.3f [s]", elapsedTime);
 		DrawFormatString(0, 40, GetColor(255, 255, 255), "[R] : Restart");
+
+		DrawFormatString(0, 60, GetColor(255, 255, 255), "p0 (%6.1f,%6.1f,%6.1f)",
+			start.x, start.y, start.z);
+		DrawFormatString(0, 80, GetColor(255, 255, 255), "p1 (%6.1f,%6.1f,%6.1f)",
+			point1.x, point1.y, point1.z);
+		DrawFormatString(0, 100, GetColor(255, 255, 255), "p2 (%6.1f,%6.1f,%6.1f)",
+			end.x, end.y, end.z);
 
 		//---------  ここまでにプログラムを記述  ---------//
 		// (ダブルバッファ)裏面

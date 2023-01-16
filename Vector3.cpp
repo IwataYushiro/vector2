@@ -43,6 +43,15 @@ const Vector3 lerp(const Vector3& start, const Vector3& end, const float t)
 	//return start * (1.0f - y) + end * y;
 	return start * (1.0f - t) + end * t;
 }
+const Vector3 Bezier2(const Vector3& p0, const Vector3& p1, const Vector3& p2, const float t)
+{
+	return (1.0f - t) * (1.0f - t) * p0 + 2.0f * (1.0f - t) * t * p1 + t * t * p2;
+}
+
+const Vector3 Bezier3(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float t)
+{
+	return 6.0f * (1.0f - t) * (p2 - 2.0f * p1 + p0) + 6.0f * t * (p3 - 2.0f * p2 + p1);
+}
 
 Vector3 Vector3::operator+()const
 {

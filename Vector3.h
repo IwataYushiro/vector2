@@ -43,3 +43,5 @@ const Vector3 operator*(float s, const Vector3& v);
 const Vector3 operator/(const Vector3& v, float s);
 
 const Vector3 lerp(const Vector3& start, const Vector3& end, const float t);
+const Vector3 Bezier2(const Vector3& p0, const Vector3& p1, const Vector3& p2, const float t);
+const Vector3 Bezier3(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const float t);
