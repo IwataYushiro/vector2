@@ -311,8 +311,9 @@ Vector3 splinePosition(const std::vector<Vector3>& points, size_t startIndex, fl
 	Vector3 p3 = points[startIndex + 2];
 
 	//Catmull-Rom‚ÌŽ®‚É‚æ‚é•âŠÔ
-	Vector3 position = (2.0f * p1 + (-p0 + p2) * t + (2.0f * p0 - 5.0f * p1 + 4.0f * p2 - p3) * t * t +
-		(-p0 + 3.0f * p1 - 3.0f * p2 + p3) * t * t * t) - 0.5f;
+	Vector3 position = 0.5f * (2.0f * p1 + (-1.0f * p0 + p2) * t +
+		(2.0f * p0 - 5.0f * p1 + 4.0f * p2 - 1.0f * p3) * t * t +
+		(-1.0f * p0 + 3.0f * p1 - 3.0f * p2 + p3) * t * t * t);
 
 	return position;
 }
