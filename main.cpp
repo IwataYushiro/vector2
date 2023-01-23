@@ -1,5 +1,4 @@
 #include "DxLib.h"
-#include <cstdlib>
 #include <vector>
 #include "Vector3.h"
 
@@ -37,9 +36,6 @@ int SetCameraPositionAndTargetAndUpVec(
 void DrawAxis3D(const float length);	//x,y,z軸の描画
 //キー操作の描画
 void DrawKeyOperation();
-
-//制御点の集合(Vectorコンテナ)、補間する区間の添字、時間経過率
-Vector3 splinePosition(const std::vector<Vector3>& points, size_t startIndex, float t);
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine,
 	_In_ int nCmdShow) {
@@ -295,25 +291,4 @@ void DrawKeyOperation()
 	DrawFormatString(10, 20 * 4, GetColor(255, 255, 255), "　			EZ: Z軸周りの回転");
 }
 
-//スプラインのポジション
-Vector3 splinePosition(const std::vector<Vector3>& points, size_t startIndex, float t)
-{
-	//補間すべき点の数
-	size_t n = points.size() - 2;
 
-	if (startIndex > n)return points[n];
-	if (startIndex < 1)return points[1];
-
-	//p0～p3の制御点を取得する(p1～p2を補間する)
-	Vector3 p0 = points[startIndex - 1];
-	Vector3 p1 = points[startIndex];
-	Vector3 p2 = points[startIndex + 1];
-	Vector3 p3 = points[startIndex + 2];
-
-	//Catmull-Romの式による補間
-	Vector3 position = 0.5f * (2.0f * p1 + (-1.0f * p0 + p2) * t +
-		(2.0f * p0 - 5.0f * p1 + 4.0f * p2 - 1.0f * p3) * t * t +
-		(-1.0f * p0 + 3.0f * p1 - 3.0f * p2 + p3) * t * t * t);
-
-	return position;
-}
