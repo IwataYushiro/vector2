@@ -1,4 +1,5 @@
 #include "DxLib.h"
+#include "Quaternion.h"
 
 // ウィンドウのタイトルに表示する文字列
 const char TITLE[] = "LE2C_03_イワタ_ユウシロウ";
@@ -37,9 +38,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// 画像などのリソースデータの変数宣言と読み込み
-
-
+	Quaternion* q = new Quaternion();
+	
 	// ゲームループで使う変数の宣言
+	Quaternion q1 = { 2.0f,3.0f,4.0f,1.0f };
+	Quaternion q2 = { 1.0f,3.0f,5.0f,2.0f };
+	
+	Quaternion mul1 = q->Multiply(q1, q2);
+	Quaternion mul2 = q->Multiply(q2, q1);
 
 
 	// 最新のキーボード情報用
@@ -64,7 +70,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
-
+		DrawFormatString(0, 100, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Multiply(q1, q2)",
+			mul1.x,mul1.y,mul1.z,mul1.w);
+		DrawFormatString(0, 120, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Multiply(q2, q1)",
+			mul2.x, mul2.y, mul2.z, mul2.w);
 
 		// 描画処理
 
@@ -90,6 +99,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// Dxライブラリ終了処理
 	DxLib_End();
 
+	delete q;
 	// 正常終了
 	return 0;
 }

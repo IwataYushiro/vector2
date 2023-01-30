@@ -1,7 +1,7 @@
 #include "Vector3.h"
 #include <cmath>		//sqat
 
-Vector3::Vector3()
+Vector3::Vector3() :x(0.0f), y(0.0f), z(0.0f)
 {
 }
 
@@ -32,6 +32,15 @@ Vector3 Vector3::cross(const Vector3& v) const
 	vec3.x = y * v.z - z * v.y;
 	vec3.y = z * v.x - x * v.z;
 	vec3.z = x * v.y - y * v.x;
+
+	return vec3;
+}
+Vector3 Vector3::cross2(const Vector3& v1, const Vector3& v2)
+{
+	Vector3 vec3;
+	vec3.x = v1.y * v2.z - v1.z * v2.y;
+	vec3.y = v1.z * v2.x - v1.x * v2.z;
+	vec3.z = v1.x * v2.y - v1.y * v2.x;
 
 	return vec3;
 }
@@ -84,7 +93,7 @@ Vector3 Vector3::operator+()const
 Vector3 Vector3::operator-()const
 {
 
-	return (-*this);
+	return Vector3(-x, -y, -z);
 }
 
 Vector3& Vector3::operator+=(const Vector3& v)
@@ -144,6 +153,11 @@ const Vector3 operator*(const Vector3& v, float s)
 const Vector3 operator*(float s, const Vector3& v)
 {
 	return v * s;
+}
+
+const Vector3 operator*(const Vector3& v1, const Vector3& v2)
+{
+	return v1 * v2;
 }
 
 const Vector3 operator/(const Vector3& v, float s)

@@ -18,6 +18,7 @@ public:
 	Vector3& normalize();					//³‹K‰»‚·‚é
 	float dot(const Vector3& v) const;		//“àÏ‚ğ‹‚ß‚é
 	Vector3 cross(const Vector3& v) const;	//ŠOÏ‚ğ‹‚ß‚é
+	Vector3 cross2(const Vector3& v1,const Vector3& v2);	//ŠOÏ‚ğ‹‚ß‚é
 	//•âŠÔŠÖ”
 	//üŒ`•âŠÔ(1ŸŠÖ”•âŠÔ)
 
@@ -41,6 +42,7 @@ const Vector3 operator+(const Vector3& v1, const Vector3& v2);
 const Vector3 operator-(const Vector3& v1, const Vector3& v2);
 const Vector3 operator*(const Vector3& v, float s);
 const Vector3 operator*(float s, const Vector3& v);
+const Vector3 operator*(const Vector3& v1, const Vector3& v2);
 const Vector3 operator/(const Vector3& v, float s);
 
 const Vector3 lerp(const Vector3& start, const Vector3& end, const float t);
