@@ -71,10 +71,10 @@ Quaternion Quaternion::Inverse(const Quaternion& q)
 	if (len != 0.0f)
 	{
 		Quaternion in;
-		in.x = q.x*((Conjugate(q).x) / (len * len));
-		in.y = q.y*((Conjugate(q).y) / (len * len));
-		in.z = q.z*((Conjugate(q).z) / (len * len));
-		in.w = q.w*((Conjugate(q).w) / (len * len));
+		in.x = 1.0f * Conjugate(q).x / (len * len);
+		in.y = 1.0f * Conjugate(q).y / (len * len);
+		in.z = 1.0f * Conjugate(q).z / (len * len);
+		in.w = 1.0f * Conjugate(q).w / (len * len);
 		return in;
 	}
 	return *this;
