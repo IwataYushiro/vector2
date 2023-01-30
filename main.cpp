@@ -43,7 +43,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// ゲームループで使う変数の宣言
 	Quaternion q1 = { 2.0f,3.0f,4.0f,1.0f };
 	Quaternion q2 = { 1.0f,3.0f,5.0f,2.0f };
-	
+	Quaternion identity = q->Identity();
+	Quaternion conj = q->Conjugate(q1);
 	Quaternion mul1 = q->Multiply(q1, q2);
 	Quaternion mul2 = q->Multiply(q2, q1);
 
@@ -70,6 +71,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
+		DrawFormatString(0, 0, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Identity",
+			identity.x, identity.y, identity.z, identity.w);
+		DrawFormatString(0, 20, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Conjugate",
+			conj.x, conj.y, conj.z, conj.w);
 		DrawFormatString(0, 100, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Multiply(q1, q2)",
 			mul1.x,mul1.y,mul1.z,mul1.w);
 		DrawFormatString(0, 120, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Multiply(q2, q1)",

@@ -23,13 +23,13 @@ public:
 	//単位Quaternionを返す
 	Quaternion Identity();
 	//共役Quaternionを返す
-	Quaternion Conjugate(const Quaternion& quaternion);
+	Quaternion Conjugate(const Quaternion& q);
 	//Quaternionのnormを返す
-	float norm(const Quaternion& quaternion);
+	float norm(const Quaternion& q);
 	//正規化したQuaternionを返す
-	Quaternion Normalize(const Quaternion& quaternion);
+	Quaternion Normalize(const Quaternion& q);
 	//逆Quaternionを返す
-	Quaternion Inverse(const Quaternion& quaternion);
+	Quaternion Inverse(const Quaternion& q);
 
 	//単項演算子オーバーロード
 	Quaternion operator+() const;

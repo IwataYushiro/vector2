@@ -42,25 +42,25 @@ Quaternion Quaternion::Multiply(const Quaternion& lhs, const Quaternion& rhs)
 
 Quaternion Quaternion::Identity()
 {
-	return Quaternion();
+	return Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-Quaternion Quaternion::Conjugate(const Quaternion& quaternion)
+Quaternion Quaternion::Conjugate(const Quaternion& q)
 {
-	return Quaternion();
+	return Quaternion(-q.x, -q.y, -q.z, q.w);
 }
 
-float Quaternion::norm(const Quaternion& quaternion)
+float Quaternion::norm(const Quaternion& q)
 {
 	return 0.0f;
 }
 
-Quaternion Quaternion::Normalize(const Quaternion& quaternion)
+Quaternion Quaternion::Normalize(const Quaternion& q)
 {
 	return Quaternion();
 }
 
-Quaternion Quaternion::Inverse(const Quaternion& quaternion)
+Quaternion Quaternion::Inverse(const Quaternion& q)
 {
 	return Quaternion();
 }
