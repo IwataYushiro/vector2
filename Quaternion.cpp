@@ -52,17 +52,32 @@ Quaternion Quaternion::Conjugate(const Quaternion& q)
 
 float Quaternion::norm(const Quaternion& q)
 {
-	return 0.0f;
+	return sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
 }
 
 Quaternion Quaternion::Normalize(const Quaternion& q)
 {
-	return Quaternion();
+	float len = norm(q);
+	if (len != 0.0f)
+	{
+		return q / len;
+	}
+	return *this;
 }
 
 Quaternion Quaternion::Inverse(const Quaternion& q)
 {
-	return Quaternion();
+	float len = norm(q);
+	if (len != 0.0f)
+	{
+		Quaternion in;
+		in.x = q.x*((Conjugate(q).x) / (len * len));
+		in.y = q.y*((Conjugate(q).y) / (len * len));
+		in.z = q.z*((Conjugate(q).z) / (len * len));
+		in.w = q.w*((Conjugate(q).w) / (len * len));
+		return in;
+	}
+	return *this;
 }
 
 
@@ -82,6 +97,7 @@ Quaternion& Quaternion::operator+=(const Quaternion& v)
 	x += v.x;
 	y += v.y;
 	z += v.z;
+	w += v.w;
 
 	return *this;
 }
@@ -91,6 +107,7 @@ Quaternion& Quaternion::operator-=(const Quaternion& v)
 	x -= v.x;
 	y -= v.y;
 	z -= v.z;
+	w -= v.w;
 
 	return *this;
 }
@@ -100,6 +117,7 @@ Quaternion& Quaternion::operator*=(float s)
 	x *= s;
 	y *= s;
 	z *= s;
+	w *= s;
 	return *this;
 }
 
@@ -108,6 +126,8 @@ Quaternion& Quaternion::operator/=(float s)
 	x /= s;
 	y /= s;
 	z /= s;
+	w /= s;
+
 	return *this;
 }
 

@@ -45,8 +45,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Quaternion q2 = { 1.0f,3.0f,5.0f,2.0f };
 	Quaternion identity = q->Identity();
 	Quaternion conj = q->Conjugate(q1);
+	Quaternion inv = q->Inverse(q1);
+	Quaternion normal = q->Normalize(q1);
 	Quaternion mul1 = q->Multiply(q1, q2);
 	Quaternion mul2 = q->Multiply(q2, q1);
+	float norm = q->norm(q1);
 
 
 	// 最新のキーボード情報用
@@ -75,10 +78,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			identity.x, identity.y, identity.z, identity.w);
 		DrawFormatString(0, 20, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Conjugate",
 			conj.x, conj.y, conj.z, conj.w);
-		DrawFormatString(0, 100, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Multiply(q1, q2)",
+		DrawFormatString(0, 40, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Inverse",
+			inv.x, inv.y, inv.z, inv.w);
+		DrawFormatString(0, 60, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Normalize",
+			normal.x, normal.y, normal.z, normal.w);
+		DrawFormatString(0, 80, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Multiply(q1, q2)",
 			mul1.x,mul1.y,mul1.z,mul1.w);
-		DrawFormatString(0, 120, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Multiply(q2, q1)",
+		DrawFormatString(0, 100, GetColor(255, 255, 255), "%f, %f, %f, %f    ::Multiply(q2, q1)",
 			mul2.x, mul2.y, mul2.z, mul2.w);
+		DrawFormatString(0, 120, GetColor(255, 255, 255), "%f    ::norm",
+			norm);
 
 		// 描画処理
 
