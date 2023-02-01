@@ -41,6 +41,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Quaternion* q = new Quaternion();
 	
 	// ゲームループで使う変数の宣言
+	const float pi = 3.141592f;
+
 	Quaternion q1 = { 2.0f,3.0f,4.0f,1.0f };
 	Quaternion q2 = { 1.0f,3.0f,5.0f,2.0f };
 	Quaternion identity = q->Identity();
@@ -51,7 +53,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Quaternion mul2 = q->Multiply(q2, q1);
 	float norm = q->norm(q1);
 
-
+	Quaternion rotation;
+	Vector3 pointY = { 0.0f,1.0f,0.0f };
+	Matrix4 rotateMatrix;
+	Vector3 rotateByQuaternion;
+	Vector3 rotateByMatrix;
+	
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
 
