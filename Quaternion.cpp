@@ -147,7 +147,10 @@ Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t
 		dot = -dot;		//“àÏ‚à‰ñ“]
 	}
 
-	
+	if (dot >= 1.0f - epsiron)
+	{
+		return (1.0f - t) * q0 + t * q1;
+	}
 
 	//‚È‚·Šp‚ğ‹‚ß‚é
 	float thera = std::acos(dot);
