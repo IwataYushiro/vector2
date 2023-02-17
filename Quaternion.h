@@ -13,6 +13,7 @@ public:
 public:
 	//コンストラクタ
 	Quaternion();								//零ベクトルとして生成
+	Quaternion(Vector3 v,float w);
 	Quaternion(float x, float y, float z, float w);		//x成分、y成分、z成分を指定して生成
 
 	//内積

@@ -4,6 +4,10 @@ Quaternion::Quaternion()
 {
 }
 
+Quaternion::Quaternion(Vector3 v, float w) :x(v.x), y(v.y), z(v.z), w(w)
+{
+}
+
 Quaternion::Quaternion(float x, float y, float z, float w) :x(x), y(y), z(z), w(w)
 {
 }
@@ -80,9 +84,10 @@ Quaternion Quaternion::Inverse(const Quaternion& q)
 	return *this;
 }
 
-//”CˆÓ²‰ñ“]‚ğ•\‚·Quaternion‚Ì¶¬(angle‚Ì³‹K‰»‚Í•K{)
+//”CˆÓ²‰ñ“]‚ğ•\‚·Quaternion‚Ì¶¬(axis‚Ì³‹K‰»‚Í•K{)
 Quaternion Quaternion::MakeAxisAngle(const Vector3& axis, float angle)
 {
+
 	Quaternion result;
 	result.x = axis.x * sinf(angle / 2.0f);
 	result.y = axis.y * sinf(angle / 2.0f);
@@ -96,11 +101,14 @@ Quaternion Quaternion::MakeAxisAngle(const Vector3& axis, float angle)
 Vector3 Quaternion::RotateVector(const Vector3& v, const Quaternion& q)
 {
 	Vector3 result;
-	Quaternion Q = q * v * Identity();
+	Quaternion Q(v, 0.0f);
 
-	result.x = Q.x;
-	result.y = Q.y;
-	result.z = Q.z;
+	Quaternion Q1 = Multiply(q, Q);
+	Quaternion Q2 = Conjugate(q);
+
+	Q = Multiply(Q1, Q2);
+	
+	result = { Q.x,Q.y,Q.z };
 
 	return result;
 }
@@ -201,12 +209,22 @@ const Quaternion operator*(const Quaternion& q, const Vector3& v)
 
 const Quaternion operator*(const Quaternion & q1, const Quaternion& q2)
 {
-	return q1 * q2;
+	Quaternion temp(q1);
+	temp.x *= q2.x;
+	temp.y *= q2.y;
+	temp.z *= q2.z;
+	temp.w *= q2.w;
+
+	return temp;
 }
 
 const Quaternion operator*(const Vector3& v, const Quaternion& q)
 {
-	return v * q;
+	Quaternion temp(q);
+	temp.x *= v.x;
+	temp.y *= v.y;
+	temp.z *= v.z;
+	return temp;
 }
 
 const Quaternion operator*(float s, const Quaternion& v)
