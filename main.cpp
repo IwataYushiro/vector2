@@ -58,6 +58,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Matrix4 rotateMatrix = q->MakeRotateMatrix(rotation);
 	Vector3 rotateByQuaternion = q->RotateVector(pointY, rotation);
 	Vector3 rotateByMatrix = transform(pointY, rotateMatrix);
+
+	Quaternion rot0 = q->MakeAxisAngle({ 0.71f,0.71f,0.0f }, 0.3f);
+	Quaternion rot1 = q->MakeAxisAngle({ 0.71f,0.0f,0.71f }, pi);
+
+	Quaternion interpolate0 = q->Slerp(rot0, rot1, 0.0f);
+	Quaternion interpolate1 = q->Slerp(rot0, rot1, 0.3f);
+	Quaternion interpolate2 = q->Slerp(rot0, rot1, 0.5f);
+	Quaternion interpolate3 = q->Slerp(rot0, rot1, 0.7f);
+	Quaternion interpolate4 = q->Slerp(rot0, rot1, 1.0f);
 	
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
@@ -81,10 +90,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
-		DrawFormatString(0, 0, GetColor(255, 255, 255), "%f, %f, %f    ::rotateByQuaternion",
-			rotateByQuaternion.x, rotateByQuaternion.y, rotateByQuaternion.z);
-		DrawFormatString(0, 20, GetColor(255, 255, 255), "%f, %f, %f    ::rotateByMatrix",
-			rotateByMatrix.x, rotateByMatrix.y, rotateByMatrix.z);
+		DrawFormatString(0, 0, GetColor(255, 255, 255), "%f, %f, %f, %f    ::interpolate0,slerp(q0,q1,0.0f)",
+			interpolate0.x, interpolate0.y, interpolate0.z, interpolate0.w);
+		DrawFormatString(0, 20, GetColor(255, 255, 255), "%f, %f, %f, %f    ::interpolate1,slerp(q0,q1,0.3f)",
+			interpolate1.x, interpolate1.y, interpolate1.z, interpolate1.w);
+		DrawFormatString(0, 40, GetColor(255, 255, 255), "%f, %f, %f, %f    ::interpolate2,slerp(q0,q1,0.5f)",
+			interpolate2.x, interpolate2.y, interpolate2.z, interpolate2.w);
+		DrawFormatString(0, 60, GetColor(255, 255, 255), "%f, %f, %f, %f    ::interpolate3,slerp(q0,q1,0.7f)",
+			interpolate3.x, interpolate3.y, interpolate3.z, interpolate3.w);
+		DrawFormatString(0, 80, GetColor(255, 255, 255), "%f, %f, %f, %f    ::interpolate4,slerp(q0,q1,1.0f)",
+			interpolate4.x, interpolate4.y, interpolate4.z, interpolate4.w);
 		
 
 		// 描画処理

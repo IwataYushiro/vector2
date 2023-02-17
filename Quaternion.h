@@ -18,6 +18,8 @@ public:
 
 	//内積
 	float dot(const Quaternion& q1, const Quaternion& q2);
+	//内積(w含む)
+	float dotQ(const Quaternion& q1, const Quaternion& q2);
 	//外積 
 	Vector3 cross(const Vector3& q1, const Vector3& q2);
 	//Quaternionの積
@@ -38,6 +40,8 @@ public:
 	Vector3 RotateVector(const Vector3& v, const Quaternion& q);
 	//Quaternionから回転行列を求める
 	Matrix4 MakeRotateMatrix(const Quaternion& q);
+	//球面線形補間
+	Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
 	//単項演算子オーバーロード
 	Quaternion operator+() const;
 	Quaternion operator-() const;

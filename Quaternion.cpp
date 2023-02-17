@@ -1,4 +1,5 @@
 #include "Quaternion.h"
+#include <cmath>
 
 Quaternion::Quaternion()
 {
@@ -15,6 +16,11 @@ Quaternion::Quaternion(float x, float y, float z, float w) :x(x), y(y), z(z), w(
 float Quaternion::dot(const Quaternion& q1, const Quaternion& q2)
 {
 	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z;
+}
+
+float Quaternion::dotQ(const Quaternion& q1, const Quaternion& q2)
+{
+	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
 }
 
 Vector3 Quaternion::cross(const Vector3& q1, const Vector3& q2)
@@ -124,6 +130,30 @@ Matrix4 Quaternion::MakeRotateMatrix(const Quaternion& q)
 		0.0f,0.0f,0.0f,1.0f
 	};
 	return result;
+}
+
+Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t)
+{
+	//q0,q1ÇÃì‡êœ
+	float dot = dotQ(q0, q1);
+
+	Quaternion Q0 = q0;
+	Quaternion Q1 = q1;
+	
+	if (dot < 0.0f)
+	{
+		Q0 = -Q0;		//Ç‡Ç§ï–ï˚ÇÃâÒì]Çóòóp
+		dot = -dot;		//ì‡êœÇ‡âÒì]
+	}
+	//Ç»Ç∑äpÇãÅÇﬂÇÈ
+	float thera = std::acos(dot);
+
+	//ï‚ä‘åWêî
+	float scale0 = sinf((1.0f - t) * thera) / sinf(thera);
+	float scale1 = sinf(t * thera) / sinf(thera);
+
+	//ï‚ä‘åWêîÇóòópÇµÇƒï‚äÆÇµÇΩQuaternionÇï‘Ç∑
+	return scale0 * q0 + scale1 * q1;
 }
 
 
