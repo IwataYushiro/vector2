@@ -60,7 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Vector3 rotateByMatrix = transform(pointY, rotateMatrix);
 
 	Quaternion rot0 = q->MakeAxisAngle({ 0.71f,0.71f,0.0f }, 0.3f);
-	Quaternion rot1 = q->MakeAxisAngle({ 0.71f,0.0f,0.71f }, pi);
+	Quaternion rot1 = { -rot0.x, -rot0.y, -rot0.z, -rot0.w };
 
 	Quaternion interpolate0 = q->Slerp(rot0, rot1, 0.0f);
 	Quaternion interpolate1 = q->Slerp(rot0, rot1, 0.3f);

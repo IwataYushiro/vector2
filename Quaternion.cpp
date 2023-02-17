@@ -134,17 +134,21 @@ Matrix4 Quaternion::MakeRotateMatrix(const Quaternion& q)
 
 Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t)
 {
+	//ã…è¨ÇÃílepsilon
+	const float epsiron = 0.0005f;
 	//q0,q1ÇÃì‡êœ
 	float dot = dotQ(q0, q1);
 
 	Quaternion Q0 = q0;
-	Quaternion Q1 = q1;
 	
 	if (dot < 0.0f)
 	{
 		Q0 = -Q0;		//Ç‡Ç§ï–ï˚ÇÃâÒì]Çóòóp
 		dot = -dot;		//ì‡êœÇ‡âÒì]
 	}
+
+	
+
 	//Ç»Ç∑äpÇãÅÇﬂÇÈ
 	float thera = std::acos(dot);
 
