@@ -174,15 +174,18 @@ Quaternion Quaternion::DirectionToDirection(const Vector3& u, const Vector3& v)
 {
 	Vector3 U = u;
 	Vector3 V = v;
+	//u,vを正規化して内積を求める
 	float dot = dotV(U.normalize(), V.normalize());
-
+	//u,vの外積を取る
 	Vector3 c;
 	c = cross(U, V);
-
+	//軸は単位ベクトルである必要があるので正規化
+	//u,vが単位ベクトルであっても、外積が単位ベクトルとは限らないのでここの正規化は必須
 	Vector3 axis = c.normalize();
-
+	//単位ベクトルで内積を取っているのでacosで角度を求める
 	float theta = std::acos(dot);
 
+	//axis,thetaで任意軸回転を作って返す
 	Quaternion result;
 
 	result = Quaternion
