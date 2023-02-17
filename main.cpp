@@ -68,6 +68,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Quaternion interpolate3 = q->Slerp(rot0, rot1, 0.7f);
 	Quaternion interpolate4 = q->Slerp(rot0, rot1, 1.0f);
 	
+	Vector3 direction1 = { 1.0f,0.0f,1.0f };
+	Vector3 direction2 = { 1.0f,1.0f,0.0f };
+	Quaternion dirToDir = q->DirectionToDirection(direction1, direction2);
 	// 最新のキーボード情報用
 	char keys[256] = { 0 };
 
@@ -90,16 +93,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ----------//
 
 		// 更新処理
-		DrawFormatString(0, 0, GetColor(255, 255, 255), "%1.2f, %1.2f, %1.2f, %1.2f    ::interpolate0,slerp(q0,q1,0.0f)",
-			interpolate0.x, interpolate0.y, interpolate0.z, interpolate0.w);
-		DrawFormatString(0, 20, GetColor(255, 255, 255), "%1.2f, %1.2f, %1.2f, %1.2f    ::interpolate1,slerp(q0,q1,0.3f)",
-			interpolate1.x, interpolate1.y, interpolate1.z, interpolate1.w);
-		DrawFormatString(0, 40, GetColor(255, 255, 255), "%1.2f, %1.2f, %1.2f, %1.2f    ::interpolate2,slerp(q0,q1,0.5f)",
-			interpolate2.x, interpolate2.y, interpolate2.z, interpolate2.w);
-		DrawFormatString(0, 60, GetColor(255, 255, 255), "%1.2f, %1.2f, %1.2f, %1.2f    ::interpolate3,slerp(q0,q1,0.7f)",
-			interpolate3.x, interpolate3.y, interpolate3.z, interpolate3.w);
-		DrawFormatString(0, 80, GetColor(255, 255, 255), "%1.2f, %1.2f, %1.2f, %1.2f    ::interpolate4,slerp(q0,q1,1.0f)",
-			interpolate4.x, interpolate4.y, interpolate4.z, interpolate4.w);
+		DrawFormatString(0, 0, GetColor(255, 255, 255), "%1.2f, %1.2f, %1.2f, %1.2f    ::(1.0,0.0,1.0) to (1.0,1.0,0.0)",
+			dirToDir.x, dirToDir.y, dirToDir.z, dirToDir.w);
 		
 
 		// 描画処理

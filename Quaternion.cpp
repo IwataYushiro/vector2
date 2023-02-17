@@ -12,13 +12,16 @@ Quaternion::Quaternion(Vector3 v, float w) :x(v.x), y(v.y), z(v.z), w(w)
 Quaternion::Quaternion(float x, float y, float z, float w) :x(x), y(y), z(z), w(w)
 {
 }
-
-float Quaternion::dot(const Quaternion& q1, const Quaternion& q2)
+float Quaternion::dotV(const Vector3& v1, const Vector3& v2)
+{
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+float Quaternion::dotQ(const Quaternion& q1, const Quaternion& q2)
 {
 	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z;
 }
 
-float Quaternion::dotQ(const Quaternion& q1, const Quaternion& q2)
+float Quaternion::dotQW(const Quaternion& q1, const Quaternion& q2)
 {
 	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
 }
@@ -43,7 +46,7 @@ Quaternion Quaternion::Multiply(const Quaternion& lhs, const Quaternion& rhs)
 
 	lrv = cross(lv, rv) + rhs.w * lv + lhs.w * rv;
 
-	lr.w = lhs.w * rhs.w - dot(lhs, rhs);
+	lr.w = lhs.w * rhs.w - dotQ(lhs, rhs);
 
 	lr = { lrv.x,lrv.y,lrv.z,lr.w };
 
@@ -63,6 +66,11 @@ Quaternion Quaternion::Conjugate(const Quaternion& q)
 float Quaternion::norm(const Quaternion& q)
 {
 	return sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+}
+
+Vector3 Quaternion::Normalize(const Vector3& v)
+{
+	return Vector3();
 }
 
 Quaternion Quaternion::Normalize(const Quaternion& q)
@@ -137,7 +145,7 @@ Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t
 	//ã…è¨ÇÃílepsilon
 	const float epsiron = 0.0005f;
 	//q0,q1ÇÃì‡êœ
-	float dot = dotQ(q0, q1);
+	float dot = dotQW(q0, q1);
 
 	Quaternion Q0 = q0;
 	
@@ -162,7 +170,29 @@ Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, float t
 	//ï‚ä‘åWêîÇóòópÇµÇƒï‚äÆÇµÇΩQuaternionÇï‘Ç∑
 	return scale0 * q0 + scale1 * q1;
 }
+Quaternion Quaternion::DirectionToDirection(const Vector3& u, const Vector3& v)
+{
+	Vector3 U = u;
+	Vector3 V = v;
+	float dot = dotV(U.normalize(), V.normalize());
 
+	Vector3 c;
+	c = cross(U, V);
+
+	Vector3 axis = c.normalize();
+
+	float theta = std::acos(dot);
+
+	Quaternion result;
+
+	result = Quaternion
+	({ axis.x * sinf(theta / 2.0f),
+		axis.y * sinf(theta / 2.0f) ,
+		axis.z * sinf(theta / 2.0f),
+		cosf(theta / 2.0f) });
+	return result;
+
+}
 
 Quaternion Quaternion::operator+()const
 {

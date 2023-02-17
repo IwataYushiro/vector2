@@ -16,10 +16,12 @@ public:
 	Quaternion(Vector3 v,float w);
 	Quaternion(float x, float y, float z, float w);		//x成分、y成分、z成分を指定して生成
 
+	//内積(Vector3)
+	float dotV(const Vector3& v1, const Vector3& v2);
 	//内積
-	float dot(const Quaternion& q1, const Quaternion& q2);
-	//内積(w含む)
 	float dotQ(const Quaternion& q1, const Quaternion& q2);
+	//内積(w含む)
+	float dotQW(const Quaternion& q1, const Quaternion& q2);
 	//外積 
 	Vector3 cross(const Vector3& q1, const Vector3& q2);
 	//Quaternionの積
@@ -30,6 +32,8 @@ public:
 	Quaternion Conjugate(const Quaternion& q);
 	//Quaternionのnormを返す
 	float norm(const Quaternion& q);
+	//正規化したVector3を返す
+	Vector3 Normalize(const Vector3& v);
 	//正規化したQuaternionを返す
 	Quaternion Normalize(const Quaternion& q);
 	//逆Quaternionを返す
@@ -42,6 +46,8 @@ public:
 	Matrix4 MakeRotateMatrix(const Quaternion& q);
 	//球面線形補間
 	Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
+	//uからvへの回転
+	Quaternion DirectionToDirection(const Vector3& u, const Vector3& v);
 	//単項演算子オーバーロード
 	Quaternion operator+() const;
 	Quaternion operator-() const;
